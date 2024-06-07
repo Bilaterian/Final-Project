@@ -10,6 +10,9 @@ function love.load()
         resizable = true
     })
 
+    gStateStack = StateStack()
+    gStateStack:push(PlayState())
+
     love.keyboard.keysPressed = {}
 end
 
@@ -23,4 +26,17 @@ end
 
 function love.keyboard.wasPressed(key)
     return love.keyboard.keysPressed[key]
+end
+
+function love.update(dt)
+    Timer.update(dt)
+    gStateStack:update(dt)
+
+    love.keyboard.keysPressed = {}
+end
+
+function love.draw()
+    push:start()
+    gStateStack:render()
+    push:finish()
 end
