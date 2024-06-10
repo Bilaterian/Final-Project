@@ -26,3 +26,9 @@ gTextures = {
 gFrames = {
     ['tiles'] = GenerateQuads(gTextures['tiles'], 16, 16),
 }
+
+gFonts = {
+    ['small'] = love.graphics.newFont('fonts/font.ttf', 8),
+    ['medium'] = love.graphics.newFont('fonts/font.ttf', 16),
+    ['large'] = love.graphics.newFont('fonts/font.ttf', 32),
+}

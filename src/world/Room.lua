@@ -1,4 +1,5 @@
 Room = Class{}
+local mapSize = LEVEL_SIZE * TILE_SIZE
 
 function Room:init()
     self.width = LEVEL_SIZE
@@ -8,8 +9,10 @@ function Room:init()
     self:generateFloors()
 
     self.enemies = {}
-    
 
+    self.cameraX = 0
+    self.cameraY = 0
+    self.text = ""
 end
 
 function Room:generateFloors()
@@ -48,7 +51,31 @@ function Room:generateFloors()
 end
 
 function Room:update()
+    if love.keyboard.isDown('left') or love.keyboard.isDown('a') then
+        self.cameraX = self.cameraX - 10
+        self.text = 'left'
+    elseif love.keyboard.isDown('right') or love.keyboard.isDown('d') then
+        self.cameraX = self.cameraX + 10
+        self.text = 'right'
+    elseif love.keyboard.isDown('up') or love.keyboard.isDown('w') then
+        self.cameraY = self.cameraY - 10
+        self.text = 'up'
+    elseif love.keyboard.isDown('down') or love.keyboard.isDown('s') then
+        self.cameraY = self.cameraY + 10
+        self.text = 'down'
+    else
+        self.text = ''
+    end
 
+    if self.cameraX < 0 then
+        self.cameraX = 0
+    elseif self.cameraX > mapSize - VIRTUAL_WIDTH then
+        self.cameraX = mapSize - VIRTUAL_WIDTH
+    elseif self.cameraY < 0 then
+        self.cameraY = 0
+    elseif self.cameraY > mapSize - VIRTUAL_HEIGHT then
+        self.cameraY = mapSize - VIRTUAL_HEIGHT
+    end
 end
 
 function Room:render()
@@ -56,7 +83,15 @@ function Room:render()
         for x = 1, self.width do
             local tile = self.floor[y][x]
             love.graphics.draw(gTextures['tiles'], gFrames['tiles'][tile.id],
-                (x - 1) * TILE_SIZE, (y - 1) * TILE_SIZE)
+                (x - 1) * TILE_SIZE - self.cameraX, (y - 1) * TILE_SIZE - self.cameraY)
         end
     end
+
+    
+    --[[love.graphics.setFont(gFonts['large'])
+    love.graphics.setColor(1, 1, 1, 1)
+    for key, press in pairs(love.keyboard.keysPressed) do
+        love.graphics.print(key .. " " .. tostring(press))
+    end
+    love.graphics.print(self.text)]]
 end
