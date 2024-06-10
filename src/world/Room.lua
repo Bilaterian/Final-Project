@@ -1,7 +1,7 @@
 Room = Class{}
 local mapSize = LEVEL_SIZE * TILE_SIZE
 
-function Room:init()
+function Room:init(player)
     self.width = LEVEL_SIZE
     self.height = LEVEL_SIZE
 
@@ -13,6 +13,7 @@ function Room:init()
     self.cameraX = 0
     self.cameraY = 0
     self.text = ""
+    self.player = player
 end
 
 function Room:generateFloors()
@@ -52,16 +53,16 @@ end
 
 function Room:update()
     if love.keyboard.isDown('left') or love.keyboard.isDown('a') then
-        self.cameraX = self.cameraX - 10
+        self.cameraX = self.cameraX - PLAYER_WALK_SPEED
         self.text = 'left'
     elseif love.keyboard.isDown('right') or love.keyboard.isDown('d') then
-        self.cameraX = self.cameraX + 10
+        self.cameraX = self.cameraX + PLAYER_WALK_SPEED
         self.text = 'right'
     elseif love.keyboard.isDown('up') or love.keyboard.isDown('w') then
-        self.cameraY = self.cameraY - 10
+        self.cameraY = self.cameraY - PLAYER_WALK_SPEED
         self.text = 'up'
     elseif love.keyboard.isDown('down') or love.keyboard.isDown('s') then
-        self.cameraY = self.cameraY + 10
+        self.cameraY = self.cameraY + PLAYER_WALK_SPEED
         self.text = 'down'
     else
         self.text = ''
@@ -77,7 +78,7 @@ function Room:update()
         self.cameraY = mapSize - VIRTUAL_HEIGHT
     end
 
-    
+
 end
 
 function Room:render()

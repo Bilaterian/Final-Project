@@ -16,31 +16,6 @@ function Player:collides(target)
                 selfY + selfHeight < target.y or selfY > target.y + target.height)
 end
 
---repurpose this to collide with bojects in playstate
-function Player:checkObjects()
-    local direction = self.direction
-    local hitboxX, hitboxY, hitboxWidth, hitboxHeight
-
-    hitboxWidth = 4
-    hitboxHeight = 8
-
-    if direction == 'left' then
-        hitboxX = self.x - hitboxWidth
-        hitboxY = self.y + 2
-    elseif direction == 'right' then
-        hitboxX = self.x + self.width
-        hitboxY = self.y + 2
-    elseif direction == 'up' then
-        hitboxX = self.x
-        hitboxY = self.y - hitboxHeight
-    else
-        hitboxX = self.x
-        hitboxY = self.y + self.height
-    end
-
-    return false
-end
-
 function Player:render()
     Entity.render(self)
 
