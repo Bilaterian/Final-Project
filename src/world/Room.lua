@@ -76,6 +76,8 @@ function Room:update()
     elseif self.cameraY > mapSize - VIRTUAL_HEIGHT then
         self.cameraY = mapSize - VIRTUAL_HEIGHT
     end
+
+    
 end
 
 function Room:render()

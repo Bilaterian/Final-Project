@@ -1,6 +1,7 @@
 PlayState = Class{__includes = BaseState}
 
 function PlayState:init()
+    
     self.room = Room()
 end
 
