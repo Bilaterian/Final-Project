@@ -2,9 +2,7 @@ EntityWalkState = Class{__includes = BaseState}
 
 function EntityWalkState:init(entity, player)
     self.entity = entity
-    self.entity:changeAnimation('walk-down')
-
-    self.player = player
+    self.entity:changeAnimation('walk-left')
 
     -- used for AI control
     self.moveDuration = 0
@@ -20,35 +18,33 @@ function EntityWalkState:update(dt)
     self.bumped = false
 
     -- boundary checking on all sides, allowing us to avoid collision detection on tiles
-    if self.entity.direction == 'left' then
+    if self.entity.mapDirection == 'left' then
         self.entity.x = self.entity.x - self.entity.walkSpeed * dt
         
-        if self.entity.x <= MAP_RENDER_OFFSET_X + TILE_SIZE then 
-            self.entity.x = MAP_RENDER_OFFSET_X + TILE_SIZE
+        if self.entity.x <= 0 then
+            self.entity.x = 0
             self.bumped = true
         end
-    elseif self.entity.direction == 'right' then
+    elseif self.entity.mapDirection == 'right' then
         self.entity.x = self.entity.x + self.entity.walkSpeed * dt
 
-        if self.entity.x + self.entity.width >= VIRTUAL_WIDTH - TILE_SIZE * 2 then
-            self.entity.x = VIRTUAL_WIDTH - TILE_SIZE * 2 - self.entity.width
+        if self.entity.x + self.entity.width >= MAPSIZE - TILE_SIZE then
+            self.entity.x = MAPSIZE - TILE_SIZE
             self.bumped = true
         end
-    elseif self.entity.direction == 'up' then
+    elseif self.entity.mapDirection == 'up' then
         self.entity.y = self.entity.y - self.entity.walkSpeed * dt
 
-        if self.entity.y <= MAP_RENDER_OFFSET_Y + TILE_SIZE - self.entity.height / 2 then 
-            self.entity.y = MAP_RENDER_OFFSET_Y + TILE_SIZE - self.entity.height / 2
+        if self.entity.y <= 0 then
+            self.entity.y = 0
             self.bumped = true
         end
-    elseif self.entity.direction == 'down' then
+    elseif self.entity.mapDirection == 'down' then
         self.entity.y = self.entity.y + self.entity.walkSpeed * dt
 
-        local bottomEdge = VIRTUAL_HEIGHT - (VIRTUAL_HEIGHT - MAP_HEIGHT * TILE_SIZE) 
-            + MAP_RENDER_OFFSET_Y - TILE_SIZE
 
-        if self.entity.y + self.entity.height >= bottomEdge then
-            self.entity.y = bottomEdge - self.entity.height
+        if self.entity.y >= MAPSIZE - TILE_SIZE then
+            self.entity.y = MAPSIZE - TILE_SIZE
             self.bumped = true
         end
     end
@@ -56,13 +52,13 @@ end
 
 function EntityWalkState:processAI(params, dt)
     local room = params.room
-    local directions = {'left', 'right', 'up', 'down'}
+    local directions = {'left', 'right'}
 
     if self.moveDuration == 0 or self.bumped then
         
         -- set an initial move duration and direction
         self.moveDuration = math.random(5)
-        self.entity.direction = directions[math.random(#directions)]
+        self.entity.mapDirection = directions[math.random(#directions)]
         self.entity:changeAnimation('walk-' .. tostring(self.entity.direction))
     elseif self.movementTimer > self.moveDuration then
         self.movementTimer = 0
@@ -83,7 +79,7 @@ end
 function EntityWalkState:render()
     local anim = self.entity.currentAnimation
     love.graphics.draw(gTextures[anim.texture], gFrames[anim.texture][anim:getCurrentFrame()],
-        math.floor(self.entity.x - self.entity.offsetX), math.floor(self.entity.y - self.entity.offsetY))
+        self.entity.x , self.entity.y)
     
     -- debug code
     -- love.graphics.setColor(255, 0, 255, 255)

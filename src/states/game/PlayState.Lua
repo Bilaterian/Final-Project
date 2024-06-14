@@ -16,6 +16,13 @@ function PlayState:init()
 
         health = 10,
     }
+    self.player.stateMachine = StateMachine {
+        ['walk'] = function() return PlayerWalkState(self.player) end,
+        ['idle'] = function() return PlayerIdleState(self.player) end,
+    }
+
+    self.player:changeState('idle')
+
     self.room = Room(self.player)
 end
 
@@ -23,7 +30,7 @@ function PlayState:update(dt)
     if love.keyboard.wasPressed('escape') then
         love.event.quit()
     end
-    self.room:update()
+    self.room:update(dt)
 end
 
 function PlayState:render()

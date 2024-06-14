@@ -1,6 +1,6 @@
 PlayerWalkState = Class{__includes = EntityWalkState}
 
-function PlayerWalkState:init(player, dungeon)
+function PlayerWalkState:init(player)
     self.entity = player
 
     -- render offset for spaced character sprite; negated in render function of state
@@ -12,19 +12,17 @@ function PlayerWalkState:update(dt)
     if love.keyboard.isDown('left') then
         self.entity.direction = 'left'
         self.entity:changeAnimation('walk-left')
-        self.entity.DebugText = 'walk-left'
+        self.entity.mapDirection = 'left'
     elseif love.keyboard.isDown('right') then
         self.entity.direction = 'right'
         self.entity:changeAnimation('walk-right')
-        self.entity.DebugText = 'walk-right'
+        self.entity.mapDirection = 'right'
     elseif love.keyboard.isDown('up') then
-        self.entity.direction = 'up'
-        self.entity:changeAnimation('walk-up')
-        self.entity.DebugText = 'walk-up'
+        self.entity:changeAnimation('walk-' .. self.entity.direction)
+        self.entity.mapDirection = 'up'
     elseif love.keyboard.isDown('down') then
-        self.entity.direction = 'down'
-        self.entity:changeAnimation('walk-down')
-        self.entity.DebugText = 'walk-down'
+        self.entity:changeAnimation('walk-' .. self.entity.direction)
+        self.entity.mapDirection = 'down'
     else
         self.entity:changeState('idle')
     end

@@ -16,6 +16,22 @@ function Player:collides(target)
                 selfY + selfHeight < target.y or selfY > target.y + target.height)
 end
 
+function Player:isAtCenterX()
+    if self.x >= VIRTUAL_WIDTH / 2 - 8 and self.x <= VIRTUAL_WIDTH / 2 + 8 then
+        return true
+    else
+        return false
+    end
+end
+
+function Player:isAtCenterY()
+    if self.y >= VIRTUAL_HEIGHT / 2 - 8 and self.y <= VIRTUAL_HEIGHT / 2 + 8 then
+        return true
+    else
+        return false
+    end
+end
+
 function Player:render()
     Entity.render(self)
 

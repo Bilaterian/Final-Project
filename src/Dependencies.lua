@@ -9,9 +9,12 @@ require 'src/constants'
 require 'src/Entity'
 require 'src/entity_defs'
 --gameobject
---gameombjects
+--gameobjects
 --hitbox
+require 'src/GameLevel'
+require 'src/LevelMaker'
 require 'src/Player'
+require 'src/TileMap'
 require 'src/StateMachine'
 require 'src/Util'
 
