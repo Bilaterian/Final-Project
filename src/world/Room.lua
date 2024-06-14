@@ -9,22 +9,16 @@ function Room:init(player)
 
     self.enemies = {}
 
-    self.cameraX = 0
-    self.cameraY = 0
     self.text = ""
     self.player = player
+    self.cameraX = self.player.x - (VIRTUAL_WIDTH / 2 - 8)
+    self.cameraY = self.player.y - (VIRTUAL_HEIGHT / 2 - 8)
 end
 
 function Room:update(dt)
-    if self.player:isAtCenterX() then
-        
-    end
-
-    if self.player:isAtCenterY() then
-        
-    end
-    self.cameraX = self.player.x - (VIRTUAL_WIDTH / 2) + 8
-    self.cameraY = self.player.y - (VIRTUAL_HEIGHT / 2) + 8
+    
+    self.cameraX = self.player.x - (VIRTUAL_WIDTH / 2 - 8)
+    self.cameraY =  self.player.y - (VIRTUAL_HEIGHT / 2 - 8)
 
     if self.cameraX < 0 then
         self.cameraX = 0

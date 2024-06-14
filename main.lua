@@ -1,5 +1,8 @@
 require 'src/Dependencies'
 
+local framerate = 1 / FPSCAP
+local tick = 0
+local framePush = false
 function love.load()
     love.window.setTitle('Final Project')
     love.graphics.setDefaultFilter('nearest', 'nearest')
@@ -27,6 +30,7 @@ end
 function love.keyboard.wasPressed(key)
     return love.keyboard.keysPressed[key]
 end
+
 
 function love.update(dt)
     Timer.update(dt)

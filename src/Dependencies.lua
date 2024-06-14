@@ -6,6 +6,7 @@ Timer = require 'lib/knife.timer'
 
 require 'src/Animation'
 require 'src/constants'
+require 'src/StateMachine'
 require 'src/Entity'
 require 'src/entity_defs'
 --gameobject
@@ -15,7 +16,6 @@ require 'src/GameLevel'
 require 'src/LevelMaker'
 require 'src/Player'
 require 'src/TileMap'
-require 'src/StateMachine'
 require 'src/Util'
 
 require 'src/world/Room'

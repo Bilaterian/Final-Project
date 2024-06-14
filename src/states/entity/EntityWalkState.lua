@@ -79,8 +79,7 @@ end
 function EntityWalkState:render()
     local anim = self.entity.currentAnimation
     love.graphics.draw(gTextures[anim.texture], gFrames[anim.texture][anim:getCurrentFrame()],
-        self.entity.x , self.entity.y)
-    
+        math.floor(self.entity.x) , math.floor(self.entity.y))
     -- debug code
     -- love.graphics.setColor(255, 0, 255, 255)
     -- love.graphics.rectangle('line', self.entity.x, self.entity.y, self.entity.width, self.entity.height)
