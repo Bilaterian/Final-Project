@@ -4,8 +4,8 @@ function PlayState:init()
     self.player = Player {
         x = VIRTUAL_WIDTH / 2 - 8,
         y = VIRTUAL_HEIGHT / 2 - 8,
-        width = 16,
-        height = 16,
+        width = 12,
+        height = 12,
 
     -- drawing offsets for padded sprites
         offsetX = 0,
@@ -14,6 +14,7 @@ function PlayState:init()
         walkSpeed = ENTITY_DEFS['player'].walkspeed,
         animations = ENTITY_DEFS['player'].animations,
 
+        attack = 5,
         health = 10,
     }
     self.player.stateMachine = StateMachine {
@@ -34,5 +35,14 @@ function PlayState:update(dt)
 end
 
 function PlayState:render()
+    love.graphics.push()
     self.room:render()
+    love.graphics.pop()
+
+    love.graphics.setColor(0, 0, 0)
+    love.graphics.rectangle("fill", 12, 12, self.player.maxHealth * 2, 4)
+    love.graphics.setColor(1, 0, 0)
+    love.graphics.rectangle("fill", 10, 10, self.player.maxHealth * 2, 4)
+    love.graphics.setColor(0, 1, 0)
+    love.graphics.rectangle("fill", 10, 10, self.player.health * 2, 4)
 end

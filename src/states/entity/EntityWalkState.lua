@@ -48,7 +48,8 @@ end
 
 function EntityWalkState:processAI(params, dt)
     local room = params.room
-    local targetX, targetY = room.player:getXY()
+    local player = room.player
+    local targetX, targetY = player:getXY()
 
     self.entity.direction = 'left'
     if targetX > self.entity.x then
@@ -69,7 +70,6 @@ function EntityWalkState:processAI(params, dt)
         self.entity.y = targetY
     end
     self.entity:changeAnimation('walk-' .. tostring(self.entity.direction))
-
 end
 
 function EntityWalkState:render()

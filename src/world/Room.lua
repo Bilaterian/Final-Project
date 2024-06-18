@@ -26,16 +26,17 @@ function Room:generateEnemies()
             animations = ENTITY_DEFS[type].animations,
             walkSpeed = ENTITY_DEFS[type].walkspeed,
 
-            x = math.random(self.cameraX + 16, self.cameraX + VIRTUAL_WIDTH),
-            y = math.random(self.cameraY + 16, self.cameraY + VIRTUAL_WIDTH),
-            
-            width = 16,
-            height = 16,
+            x = math.random(16, LEVEL_SIZE * 16),
+            y = math.random(16, LEVEL_SIZE * 16),
+            offsetX = 1,
+            offsetY = 1,
+
+            width = 14,
+            height = 14,
             type = type,
             health = 10,
+            attack = 2,
         })
-
-
 
         self.enemies[i].stateMachine = StateMachine {
             ['walk'] = function() return EntityWalkState(self.enemies[i]) end,
@@ -73,6 +74,16 @@ function Room:update(dt)
             enemy:processAI({room = self}, dt)
             enemy:update(dt)
         end
+
+        if not enemy.dead and self.player:collides(enemy) and not self.player.invulnerable then
+            --gSounds['hit-player']:play()
+            self.player:damage(enemy.attack)
+            self.player:goInvulnerable(1.5)
+
+            if self.player.health == 0 then
+                gStateStack:push(GameOverState())
+            end
+        end
     end
 end
 
@@ -82,7 +93,7 @@ function Room:render()
     love.graphics.translate(-math.floor(self.cameraX), -math.floor(self.cameraY))
     self.level:render()
     self.player:render()
-    
+
     for key, enemy in pairs(self.enemies) do
         enemy:render()
     end
