@@ -16,6 +16,10 @@ function Player:collides(target)
                 selfY + selfHeight < target.y or selfY > target.y + target.height)
 end
 
+function Player:getXY()
+    return self.x, self.y
+end
+
 function Player:render()
     Entity.render(self)
 

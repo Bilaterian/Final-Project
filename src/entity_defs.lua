@@ -21,5 +21,28 @@ ENTITY_DEFS = {
                 texture = 'player'
             },
         }
+    },
+    ['flybot'] = {
+        walkspeed = 10,
+        animations = {
+            ['walk-left'] = {
+                frames = {1, 2},
+                interval = 0.3,
+                texture = 'enemies'
+            },
+            ['walk-right'] = {
+                frames = {3, 4},
+                interval = 0.3,
+                texture = 'enemies'
+            },
+            ['idle-left'] = {
+                frames = {1},
+                texture = 'enemies'
+            },
+            ['idle-right'] = {
+                frames = {4},
+                texture = 'enemies'
+            },
+        }
     }
 }

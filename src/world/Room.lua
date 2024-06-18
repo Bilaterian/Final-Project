@@ -7,12 +7,43 @@ function Room:init(player)
     self.level = LevelMaker.generate()
     self.tileMap = self.level.tileMap
 
-    self.enemies = {}
-
     self.text = ""
     self.player = player
     self.cameraX = self.player.x - (VIRTUAL_WIDTH / 2 - 8)
     self.cameraY = self.player.y - (VIRTUAL_HEIGHT / 2 - 8)
+
+    self.enemies = {}
+    self:generateEnemies()
+end
+
+function Room:generateEnemies()
+    local types = {'flybot'}
+
+    for i = 1, 10 do
+        local type = types[math.random(#types)]
+
+        table.insert(self.enemies, Entity {
+            animations = ENTITY_DEFS[type].animations,
+            walkSpeed = ENTITY_DEFS[type].walkspeed,
+
+            x = math.random(self.cameraX + 16, self.cameraX + VIRTUAL_WIDTH),
+            y = math.random(self.cameraY + 16, self.cameraY + VIRTUAL_WIDTH),
+            
+            width = 16,
+            height = 16,
+            type = type,
+            health = 10,
+        })
+
+
+
+        self.enemies[i].stateMachine = StateMachine {
+            ['walk'] = function() return EntityWalkState(self.enemies[i]) end,
+            ['idle'] = function() return EntityIdleState(self.enemies[i]) end
+        }
+
+        self.enemies[i]:changeState('walk')
+    end
 end
 
 function Room:update(dt)
@@ -32,6 +63,17 @@ function Room:update(dt)
     elseif self.cameraY > MAPSIZE - VIRTUAL_HEIGHT then
         self.cameraY = MAPSIZE - VIRTUAL_HEIGHT
     end
+
+    for i = #self.enemies, 1, -1 do
+        local enemy = self.enemies[i]
+
+        if enemy.health <= 0 and enemy.dead == false then
+            enemy.dead = true
+        elseif not enemy.dead then
+            enemy:processAI({room = self}, dt)
+            enemy:update(dt)
+        end
+    end
 end
 
 function Room:render()
@@ -41,6 +83,10 @@ function Room:render()
     self.level:render()
     self.player:render()
     
+    for key, enemy in pairs(self.enemies) do
+        enemy:render()
+    end
+
     love.graphics.pop()
 
     -- for checking keybinds working

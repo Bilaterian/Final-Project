@@ -36,11 +36,13 @@ require 'src/states/game/PlayState'
 gTextures = {
     ['tiles'] = love.graphics.newImage('graphics/spritesheet.png'),
     ['player'] = love.graphics.newImage('graphics/Hero.png'),
+    ['enemies'] = love.graphics.newImage('graphics/enemies.png'),
 }
 
 gFrames = {
     ['tiles'] = GenerateQuads(gTextures['tiles'], 16, 16),
     ['player'] = GenerateQuads(gTextures['player'], 16, 16),
+    ['enemies'] = GenerateQuads(gTextures['enemies'], 16, 16),
 }
 
 gFonts = {
