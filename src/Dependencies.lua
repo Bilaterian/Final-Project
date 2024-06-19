@@ -17,13 +17,12 @@ require 'src/LevelMaker'
 require 'src/Player'
 require 'src/TileMap'
 require 'src/Util'
+require 'src/Projectile'
 
 require 'src/world/Room'
 
 require 'src/states/BaseState'
 require 'src/states/StateStack'
-
-
 
 require 'src/states/entity/EntityIdleState'
 require 'src/states/entity/EntityWalkState'
@@ -38,12 +37,14 @@ gTextures = {
     ['tiles'] = love.graphics.newImage('graphics/spritesheet.png'),
     ['player'] = love.graphics.newImage('graphics/Hero.png'),
     ['enemies'] = love.graphics.newImage('graphics/enemies.png'),
+    ['projectile'] = love.graphics.newImage('graphics/projectile.png')
 }
 
 gFrames = {
     ['tiles'] = GenerateQuads(gTextures['tiles'], 16, 16),
     ['player'] = GenerateQuads(gTextures['player'], 16, 16),
     ['enemies'] = GenerateQuads(gTextures['enemies'], 16, 16),
+    ['projectile'] = GenerateQuads(gTextures['projectile'], 8, 8),
 }
 
 gFonts = {

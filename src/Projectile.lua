@@ -1,0 +1,40 @@
+Projectile = Class{}
+
+function Projectile:init(x, y, width, height, xVelocity, yVelocity)
+    self.x = x
+    self.y = y
+    self.width = width
+    self.height = height
+    self.solid = true
+    self.velocity = 2
+    self.xVelocity = xVelocity * self.velocity
+    self.yVelocity = yVelocity * self.velocity
+    self.duration = 4
+    self.timer = 0
+end
+
+function Projectile:update(dt)
+    self.timer = self.timer + dt
+    self.x = self.x + self.xVelocity
+    self.y = self.y + self.yVelocity
+
+    if self.timer >= self.duration then
+        self:destroy()
+    end
+
+end
+
+function Projectile:collides(target)
+    return not (self.x + self.width < target.x or self.x > target.x + target.width or
+                self.y + self.height < target.y or self.y > target.y + target.height)
+end
+
+function Projectile:destroy()
+    self.solid = false
+end
+
+function Projectile:render()
+    if self.solid then
+        love.graphics.draw(gTextures['projectile'], gFrames['projectile'][1], self.x, self.y)
+    end
+end

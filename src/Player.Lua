@@ -3,22 +3,28 @@ Player = Class{__includes = Entity}
 function Player:init(def)
     Entity.init(self, def)
     self.DebugText = ""
-    self.maxHealth = self.health
-    self.regenAmount = 2
-    self.regenTimer = 5
-    self.timer = 0
     self.offsetX = 2
     self.offsetY = 2
+
+    self.maxHealth = self.health
+    self.regenAmount = 2
+    self.regenRate = 5
+    self.timer = 0
+
+    self.attackRate = 2
+    self.attackTimer = 0
+    self.attackDamage = 2
 end
 
 function Player:update(dt)
     Entity.update(self, dt)
     --passive regeneration
     self.timer = self.timer + dt
-    if self.health ~= self.maxHealth and self.timer >= self.regenTimer then
+    if self.health ~= self.maxHealth and self.timer >= self.regenRate then
         self.health = math.min(self.health + self.regenAmount, self.maxHealth)
-        self.timer = self.timer % self.regenTimer
+        self.timer = self.timer % self.regenRate
     end
+
 end
 
 function Player:collides(target)

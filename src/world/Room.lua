@@ -12,8 +12,13 @@ function Room:init(player)
     self.cameraX = self.player.x - (VIRTUAL_WIDTH / 2 - 8)
     self.cameraY = self.player.y - (VIRTUAL_HEIGHT / 2 - 8)
 
+    self.mouseX = 0
+    self.mouseY = 0
+
     self.enemies = {}
     self:generateEnemies()
+
+    self.projectiles = {}
 end
 
 function Room:generateEnemies()
@@ -48,28 +53,17 @@ function Room:generateEnemies()
 end
 
 function Room:update(dt)
+    self.mouseX = self.cameraX + love.mouse.x
+    self.mouseY = self.cameraY + love.mouse.y
 
     self.player:update(dt)
 
-    self.cameraX = self.player.x - (VIRTUAL_WIDTH / 2 - 8)
-    self.cameraY =  self.player.y - (VIRTUAL_HEIGHT / 2 - 8)
-
-    if self.cameraX < 0 then
-        self.cameraX = 0
-    elseif self.cameraX > MAPSIZE - VIRTUAL_WIDTH then
-        self.cameraX = MAPSIZE - VIRTUAL_WIDTH
-    end
-    if self.cameraY < 0 then
-        self.cameraY = 0
-    elseif self.cameraY > MAPSIZE - VIRTUAL_HEIGHT then
-        self.cameraY = MAPSIZE - VIRTUAL_HEIGHT
-    end
-
     for i = #self.enemies, 1, -1 do
         local enemy = self.enemies[i]
-
         if enemy.health <= 0 and enemy.dead == false then
             enemy.dead = true
+            table.remove(self.enemies, i)
+            break
         elseif not enemy.dead then
             enemy:processAI({room = self}, dt)
             enemy:update(dt)
@@ -85,6 +79,71 @@ function Room:update(dt)
             end
         end
     end
+    --projectile here
+    self.player.attackTimer = self.player.attackTimer + dt
+    if self.player.attackTimer >= self.player.attackRate then
+        self.player.attackTimer = self.player.attackTimer % self.player.attackRate
+        --instantiate projectile
+        local xLength = math.abs(self.mouseX - (self.player.x + (self.player.width + self.player.offsetX) / 2))
+        local yLength = math.abs(self.mouseY - (self.player.y + (self.player.height + self.player.offsetY) / 2))
+        local max = xLength + yLength
+        local xNormal = xLength / max
+        local yNormal = yLength / max
+
+        local xVelocity = 0
+        if self.mouseX >= (self.player.x + (self.player.width + self.player.offsetX) / 2) then
+            --x should be positive
+            xVelocity = xNormal
+        else
+            xVelocity = xNormal * (-1)
+        end
+        local yVelocity = 0
+        if self.mouseY >= (self.player.y + (self.player.height + self.player.offsetY) / 2) then
+            yVelocity = yNormal
+        else
+            yVelocity = yNormal * (-1)
+        end
+        
+        table.insert(self.projectiles,
+        Projectile(self.player.x, self.player.y,
+                   8, 8,
+                   xVelocity, yVelocity))
+    end
+
+    --update projectiles here
+    for i = #self.projectiles, 1, -1 do
+        local projectile = self.projectiles[i]
+
+        if projectile ~= nil and projectile.solid == true then
+            projectile:update(dt)
+            for key, enemy in pairs(self.enemies) do
+                if enemy.dead == false and projectile:collides(enemy) then
+                    enemy:damage(self.player.attackDamage)
+                    --gSounds['hit-enemy']:play()
+                    projectile:destroy()
+    
+                end
+            end
+        else
+            table.remove(self.projectiles, i)
+            break
+        end
+    end
+
+    --camera update, this must always be at the end
+    self.cameraX = self.player.x - (VIRTUAL_WIDTH / 2 - 8)
+    self.cameraY =  self.player.y - (VIRTUAL_HEIGHT / 2 - 8)
+
+    if self.cameraX < 0 then
+        self.cameraX = 0
+    elseif self.cameraX > MAPSIZE - VIRTUAL_WIDTH then
+        self.cameraX = MAPSIZE - VIRTUAL_WIDTH
+    end
+    if self.cameraY < 0 then
+        self.cameraY = 0
+    elseif self.cameraY > MAPSIZE - VIRTUAL_HEIGHT then
+        self.cameraY = MAPSIZE - VIRTUAL_HEIGHT
+    end
 end
 
 function Room:render()
@@ -95,21 +154,36 @@ function Room:render()
     self.player:render()
 
     for key, enemy in pairs(self.enemies) do
-        enemy:render()
+        if enemy.dead == false then
+            enemy:render()
+        end
     end
 
-    love.graphics.pop()
-
+    for key, projectile in pairs(self.projectiles) do
+        if projectile.solid == true then
+            projectile:render()
+        end
+    end
+    --draw ray from player to mouse
+    --[[
+    love.graphics.setColor(1,0,1)
+    love.graphics.line( self.player.x + (self.player.width + self.player.offsetX) / 2,
+                        self.player.y + (self.player.height + self.player.offsetY) / 2,
+                        self.cameraX + love.mouse.x, self.cameraY + love.mouse.y)
+    ]]
     -- for checking keybinds working
-    --[[love.graphics.setFont(gFonts['large'])
+    --[[
+    love.graphics.setFont(gFonts['large'])
     love.graphics.setColor(1, 1, 1, 1)
     for key, press in pairs(love.keyboard.keysPressed) do
         love.graphics.print(key .. " " .. tostring(press))
     end
-    love.graphics.print(self.text)]]
+    love.graphics.print(self.text)
+    ]]
 
     --for checking if camera is on the right position
-    --[[love.graphics.setFont(gFonts['medium'])
+    --[[
+    love.graphics.setFont(gFonts['medium'])
     love.graphics.print(math.floor(self.player.x) .. " " .. math.floor(self.player.y), 0, 0)
     love.graphics.print(math.floor(self.cameraX + (VIRTUAL_WIDTH / 2 - 8)) .. " " ..
                         math.floor(self.cameraY + (VIRTUAL_HEIGHT / 2 - 8)), 0, 20)
@@ -121,5 +195,13 @@ function Room:render()
     else
         love.graphics.setColor(1, 1, 1)
         love.graphics.rectangle("fill", 0, 40, 10, 10)
-    end]]
+    end
+    ]]
+
+    love.graphics.pop()
+    --for checking table lengths
+    --[[
+    love.graphics.setFont(gFonts['medium'])
+    love.graphics.print(#self.enemies .. " " .. #self.projectiles)
+    ]]
 end

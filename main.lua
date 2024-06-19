@@ -12,11 +12,13 @@ function love.load()
         vsync = true,
         resizable = true
     })
+    love.mouse.x = 0
+    love.mouse.y = 0
+
+    love.keyboard.keysPressed = {}
 
     gStateStack = StateStack()
     gStateStack:push(PlayState())
-
-    love.keyboard.keysPressed = {}
 end
 
 function love.resize(w, h)
@@ -35,6 +37,9 @@ end
 function love.update(dt)
     Timer.update(dt)
     gStateStack:update(dt)
+
+    local x,y = love.mouse.getPosition()
+    love.mouse.x, love.mouse.y = push:toGame(x,y)
 
     love.keyboard.keysPressed = {}
 end
