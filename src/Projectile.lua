@@ -6,17 +6,17 @@ function Projectile:init(x, y, width, height, xVelocity, yVelocity)
     self.width = width
     self.height = height
     self.solid = true
-    self.velocity = 2
+    self.velocity = 120
     self.xVelocity = xVelocity * self.velocity
     self.yVelocity = yVelocity * self.velocity
-    self.duration = 4
+    self.duration = 10
     self.timer = 0
 end
 
 function Projectile:update(dt)
     self.timer = self.timer + dt
-    self.x = self.x + self.xVelocity
-    self.y = self.y + self.yVelocity
+    self.x = self.x + self.xVelocity * dt
+    self.y = self.y + self.yVelocity * dt
 
     if self.timer >= self.duration then
         self:destroy()

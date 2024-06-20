@@ -14,6 +14,10 @@ function Player:init(def)
     self.attackRate = 2
     self.attackTimer = 0
     self.attackDamage = 2
+
+    self.level = 1
+    self.exp = 100
+    self.expGoal = self.level * 1.25 * 80
 end
 
 function Player:update(dt)
@@ -25,6 +29,14 @@ function Player:update(dt)
         self.timer = self.timer % self.regenRate
     end
 
+end
+
+function Player:levelUp()
+    if self.exp > self.expGoal then
+        self.level = self.level + 1
+        self.exp = self.exp - self.expGoal
+        self.expGoal = self.level * 1.25 * 80
+    end
 end
 
 function Player:collides(target)

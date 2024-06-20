@@ -2,8 +2,8 @@ PlayState = Class{__includes = BaseState}
 
 function PlayState:init()
     self.player = Player {
-        x = VIRTUAL_WIDTH / 2 - 8,
-        y = VIRTUAL_HEIGHT / 2 - 8,
+        x = ((LEVEL_SIZE * 16) / 2) - 8,
+        y = ((LEVEL_SIZE * 16) / 2) - 8,
         width = 12,
         height = 12,
 
@@ -39,10 +39,13 @@ function PlayState:render()
     self.room:render()
     love.graphics.pop()
 
+    --UI is drawn here 
     love.graphics.setColor(0, 0, 0)
     love.graphics.rectangle("fill", 12, 12, self.player.maxHealth * 2, 4)
     love.graphics.setColor(1, 0, 0)
     love.graphics.rectangle("fill", 10, 10, self.player.maxHealth * 2, 4)
     love.graphics.setColor(0, 1, 0)
     love.graphics.rectangle("fill", 10, 10, self.player.health * 2, 4)
+    love.graphics.setFont(gFonts['small'])
+    love.graphics.print(tostring(self.player.maxHealth), 14 + (self.player.maxHealth * 2), 10)
 end

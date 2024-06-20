@@ -15,13 +15,15 @@ function Room:init(player)
     self.mouseX = 0
     self.mouseY = 0
 
+    self.stage = 1
+
     self.enemies = {}
-    self:generateEnemies()
+    self:generateEnemies(stage)
 
     self.projectiles = {}
 end
 
-function Room:generateEnemies()
+function Room:generateEnemies(level)
     local types = {'flybot'}
 
     for i = 1, 10 do
@@ -41,6 +43,7 @@ function Room:generateEnemies()
             type = type,
             health = 10,
             attack = 2,
+            expGive = 15 * (level or 1),
         })
 
         self.enemies[i].stateMachine = StateMachine {
@@ -62,6 +65,7 @@ function Room:update(dt)
         local enemy = self.enemies[i]
         if enemy.health <= 0 and enemy.dead == false then
             enemy.dead = true
+            self.player.exp = self.player.exp + enemy.expGive
             table.remove(self.enemies, i)
             break
         elseif not enemy.dead then
@@ -143,6 +147,13 @@ function Room:update(dt)
         self.cameraY = 0
     elseif self.cameraY > MAPSIZE - VIRTUAL_HEIGHT then
         self.cameraY = MAPSIZE - VIRTUAL_HEIGHT
+    end
+
+    --check if level up is available
+    if self.player.exp > self.player.expGoal then
+        self.player:levelUp()
+        --make a call here to change state and upgrade a stat 
+        gStateStack:push(LevelUpState(self.player))
     end
 end
 

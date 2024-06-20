@@ -32,6 +32,7 @@ function Entity:init(def)
     -- timer for turning transparency on and off, flashing
     self.flashTimer = 0
     self.dead = false
+    self.expGive = def.expGive or 0
 end
 
 function Entity:createAnimations(animations)

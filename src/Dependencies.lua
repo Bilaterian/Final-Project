@@ -31,6 +31,7 @@ require 'src/states/entity/player/PlayerIdleState'
 require 'src/states/entity/player/PlayerWalkState'
 
 require 'src/states/game/PlayState'
+require 'src/states/game/LevelUpState'
 require 'src/states/game/GameOverState'
 
 gTextures = {

@@ -33,6 +33,10 @@ function love.keyboard.wasPressed(key)
     return love.keyboard.keysPressed[key]
 end
 
+function love.mousepressed(x, y, button, istouch)
+    love.mouse.x, love.mouse.y = push:toGame(x,y)
+    love.mouse.press = true
+end
 
 function love.update(dt)
     Timer.update(dt)
