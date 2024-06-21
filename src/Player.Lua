@@ -16,23 +16,29 @@ function Player:init(def)
     self.attackDamage = 2
 
     self.level = 1
-    self.exp = 100
+    self.exp = 0
     self.expGoal = self.level * 1.25 * 80
+    
+    self.score = 0
 end
 
 function Player:update(dt)
     Entity.update(self, dt)
     --passive regeneration
-    self.timer = self.timer + dt
-    if self.health ~= self.maxHealth and self.timer >= self.regenRate then
-        self.health = math.min(self.health + self.regenAmount, self.maxHealth)
-        self.timer = self.timer % self.regenRate
+    if self.health < self.maxHealth then
+        self.timer = self.timer + dt
+        if self.health ~= self.maxHealth and self.timer >= math.max(self.regenRate, 0.1) then
+            self.health = math.min(self.health + self.regenAmount, self.maxHealth)
+            self.timer = self.timer % self.regenRate
+        end
+    else
+        self.timer = 0
     end
 
 end
 
 function Player:levelUp()
-    if self.exp > self.expGoal then
+    if self.exp >= self.expGoal then
         self.level = self.level + 1
         self.exp = self.exp - self.expGoal
         self.expGoal = self.level * 1.25 * 80

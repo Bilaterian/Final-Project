@@ -46,6 +46,7 @@ function love.update(dt)
     love.mouse.x, love.mouse.y = push:toGame(x,y)
 
     love.keyboard.keysPressed = {}
+    love.mouse.press = false
 end
 
 function love.draw()

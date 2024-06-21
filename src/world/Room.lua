@@ -18,20 +18,21 @@ function Room:init(player)
     self.stage = 1
 
     self.enemies = {}
-    self:generateEnemies(stage)
+    self:generateEnemies()
 
     self.projectiles = {}
 end
 
-function Room:generateEnemies(level)
+function Room:generateEnemies()
     local types = {'flybot'}
 
-    for i = 1, 10 do
+    for i = 1, math.max(10, math.floor(10 * self.stage * 0.75)) do
         local type = types[math.random(#types)]
 
         table.insert(self.enemies, Entity {
             animations = ENTITY_DEFS[type].animations,
-            walkSpeed = ENTITY_DEFS[type].walkspeed,
+            walkSpeed = math.max(ENTITY_DEFS[type].walkspeed,
+                        math.floor(ENTITY_DEFS[type].walkspeed * self.stage * 0.25)),
 
             x = math.random(16, LEVEL_SIZE * 16),
             y = math.random(16, LEVEL_SIZE * 16),
@@ -41,9 +42,9 @@ function Room:generateEnemies(level)
             width = 14,
             height = 14,
             type = type,
-            health = 10,
-            attack = 2,
-            expGive = 15 * (level or 1),
+            health = math.max(10, math.floor(10 * self.stage * 0.25)),
+            attack = math.max(1, math.floor(1 * self.stage * 0.25)),
+            expGive = 15 * (self.stage or 1),
         })
 
         self.enemies[i].stateMachine = StateMachine {
@@ -66,6 +67,8 @@ function Room:update(dt)
         if enemy.health <= 0 and enemy.dead == false then
             enemy.dead = true
             self.player.exp = self.player.exp + enemy.expGive
+            self.player.score = self.player.score + math.floor(enemy.expGive * math.pi) *
+                                (math.random(100, 130) / 100)
             table.remove(self.enemies, i)
             break
         elseif not enemy.dead then
@@ -79,13 +82,13 @@ function Room:update(dt)
             self.player:goInvulnerable(1.5)
 
             if self.player.health == 0 then
-                gStateStack:push(GameOverState())
+                gStateStack:push(GameOverState(self.player.score))
             end
         end
     end
     --projectile here
     self.player.attackTimer = self.player.attackTimer + dt
-    if self.player.attackTimer >= self.player.attackRate then
+    if self.player.attackTimer >= math.max(self.player.attackRate, 0.1) then
         self.player.attackTimer = self.player.attackTimer % self.player.attackRate
         --instantiate projectile
         local xLength = math.abs(self.mouseX - (self.player.x + (self.player.width + self.player.offsetX) / 2))
@@ -125,7 +128,7 @@ function Room:update(dt)
                     enemy:damage(self.player.attackDamage)
                     --gSounds['hit-enemy']:play()
                     projectile:destroy()
-    
+                    break
                 end
             end
         else
@@ -150,10 +153,14 @@ function Room:update(dt)
     end
 
     --check if level up is available
-    if self.player.exp > self.player.expGoal then
+    if self.player.exp >= self.player.expGoal then
         self.player:levelUp()
         --make a call here to change state and upgrade a stat 
         gStateStack:push(LevelUpState(self.player))
+    end
+    if #self.enemies < 1 then
+        self.stage = self.stage + 1
+        self:generateEnemies()
     end
 end
 

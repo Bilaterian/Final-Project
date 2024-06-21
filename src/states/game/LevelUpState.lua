@@ -9,20 +9,28 @@ function LevelUpState:init(player)
     self.regenRate = player.regenRate
     self.attackRate = player.attackRate
     self.attackDamage = player.attackDamage
+    self.walkSpeed = player.walkSpeed
 
-    self.options = {'Max Health', 'Regen Amount', 'Regen Speed', 'Attack Speed', 'Damage'}
+    self.options = {'Max Health', 'Regen Amount', 'Regen Speed', 'Attack Speed', 'Damage', 'Speed'}
     self.optionsText = {
         'Increase Max Health by ' .. tostring(math.floor(self.maxHealth/5)),
-        'Increase Regeneration by' .. tostring(math.max(math.floor(self.regenAmount/2), 1)),
-        'Increase Regen Speed by' .. tostring(self.regenRate * 0.1) .. '.s',
-        'Increase Attack Speed by' .. tostring(self.attackRate * 0.1) .. '.s',
-        'Increase Damage by' .. tostring(math.max(math.floor(self.attackDamage/10), 1))
+        'Increase Regeneration by ' .. tostring(math.max(math.floor(self.regenAmount/2), 1)),
+        'Increase Regen Speed by ' .. tostring(self.regenRate * 0.1) .. '.s',
+        'Increase Attack Speed by ' .. tostring(self.attackRate * 0.1) .. '.s',
+        'Increase Damage by ' .. tostring(math.max(math.floor(self.attackDamage/10), 1)),
+        'Increase Speed by ' .. tostring(math.max(math.floor(self.walkSpeed/8, 1))),
     }
 
     self.option1 = math.random(#self.options)
     self.option2 = math.random(#self.options)
     self.option3 = math.random(#self.options)
     self.select = 1
+end
+
+function LevelUpState:enter()
+    self.option1 = math.random(#self.options)
+    self.option2 = math.random(#self.options)
+    self.option3 = math.random(#self.options)
 end
 
 function LevelUpState:update(dt)
@@ -63,8 +71,10 @@ function LevelUpState:update(dt)
             self.player.regenRate = self.player.regenRate + (self.regenRate * 0.1)
         elseif selected == 4 then
             self.player.attackRate = self.player.attackRate + (self.attackRate * 0.1)
-        else
+        elseif selected == 5 then
             self.player.attackDamage = self.player.attackDamage + math.max(math.floor(self.attackDamage/10), 1)
+        else
+            self.player.walkSpeed = self.player.walkSpeed + math.max(math.floor(self.walkSpeed/8, 1))
         end
 
         gStateStack:pop()

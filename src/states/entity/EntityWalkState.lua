@@ -14,30 +14,46 @@ function EntityWalkState:update(dt)
     self.bumped = false
 
     -- boundary checking on all sides, allowing us to avoid collision detection on tiles
-    if self.entity.mapDirection == 'left' then
-        self.entity.x = self.entity.x - self.entity.walkSpeed * dt
+    if self.entity.xDirection == 'left' then
+        if self.entity.yDirection == 'none' then
+            self.entity.x = self.entity.x - self.entity.walkSpeed * dt
+        else
+            self.entity.x = self.entity.x - self.entity.walkSpeed * dt * 0.8
+        end
         
         if self.entity.x <= 0 then
             self.entity.x = 0
             self.bumped = true
         end
-    elseif self.entity.mapDirection == 'right' then
-        self.entity.x = self.entity.x + self.entity.walkSpeed * dt
+    elseif self.entity.xDirection == 'right' then
+        if self.entity.yDirection == 'none' then
+            self.entity.x = self.entity.x + self.entity.walkSpeed * dt
+        else
+            self.entity.x = self.entity.x + self.entity.walkSpeed * dt * 0.8
+        end
 
         if self.entity.x >= MAPSIZE - TILE_SIZE then
             self.entity.x = MAPSIZE - TILE_SIZE
             self.bumped = true
         end
-    elseif self.entity.mapDirection == 'up' then
-        self.entity.y = self.entity.y - self.entity.walkSpeed * dt
-
+    end
+    if self.entity.yDirection == 'up' then
+        if self.entity.xDirection == 'none' then
+            self.entity.y = self.entity.y - self.entity.walkSpeed * dt
+        else
+            self.entity.y = self.entity.y - self.entity.walkSpeed * dt / 2
+        end
+        
         if self.entity.y <= 0 then
             self.entity.y = 0
             self.bumped = true
         end
-    elseif self.entity.mapDirection == 'down' then
-        self.entity.y = self.entity.y + self.entity.walkSpeed * dt
-
+    elseif self.entity.yDirection == 'down' then
+        if self.entity.xDirection == 'none' then
+            self.entity.y = self.entity.y + self.entity.walkSpeed * dt
+        else
+            self.entity.y = self.entity.y + self.entity.walkSpeed * dt / 2
+        end
 
         if self.entity.y >= MAPSIZE - TILE_SIZE then
             self.entity.y = MAPSIZE - TILE_SIZE
@@ -54,10 +70,10 @@ function EntityWalkState:processAI(params, dt)
     self.entity.direction = 'left'
     if targetX > self.entity.x then
         self.entity.direction = 'right'
-        self.entity.mapDirection = 'right'
+        self.entity.xDirection = 'right'
     elseif targetX < self.entity.x then
         self.entity.direction = 'left'
-        self.entity.mapDirection = 'left'
+        self.entity.xDirection = 'left'
     else
         self.entity.direction = 'left'
         self.entity.x = targetX
