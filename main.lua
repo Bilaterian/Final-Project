@@ -18,7 +18,7 @@ function love.load()
     love.keyboard.keysPressed = {}
 
     gStateStack = StateStack()
-    gStateStack:push(PlayState())
+    gStateStack:push(UpgradeState())
 end
 
 function love.resize(w, h)

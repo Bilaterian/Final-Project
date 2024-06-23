@@ -1,13 +1,14 @@
 GameOverState = Class{__includes = BaseState}
 
 function GameOverState:enter(score)
-    self.score = score
+    self.score = score or -1
 end
 
 function GameOverState:update(dt)
     if love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
-        gStateStack:pop()
-        --gStateStack:pop()
+        while #gStateStack.states > 1 do
+            gStateStack:pop()
+        end
     end
 
     if love.keyboard.wasPressed('escape') then

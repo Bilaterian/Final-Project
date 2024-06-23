@@ -8,7 +8,7 @@ function LevelUpState:init(player)
     self.regenAmount = player.regenAmount
     self.regenRate = player.regenRate
     self.attackRate = player.attackRate
-    self.attackDamage = player.attackDamage
+    self.attackDamage = player.attack
     self.walkSpeed = player.walkSpeed
 
     self.options = {'Max Health', 'Regen Amount', 'Regen Speed', 'Attack Speed', 'Damage', 'Speed'}
@@ -72,22 +72,28 @@ function LevelUpState:update(dt)
         elseif selected == 4 then
             self.player.attackRate = self.player.attackRate + (self.attackRate * 0.1)
         elseif selected == 5 then
-            self.player.attackDamage = self.player.attackDamage + math.max(math.floor(self.attackDamage/10), 1)
+            self.player.attack = self.player.attack + math.max(math.floor(self.attackDamage/10), 1)
         else
             self.player.walkSpeed = self.player.walkSpeed + math.max(math.floor(self.walkSpeed/8, 1))
         end
 
         gStateStack:pop()
     end
+
+    if love.keyboard.wasPressed('escape') then
+        love.event.quit()
+    end
 end
 
 function LevelUpState:render()
+    --[[
     --draw boxes here
     --add icons and text
     --boxes will be 80 x 110
     --vertical padding = 17 top and bottom
     --horizontal padding = 4
-    
+    ]]
+
     --background
     love.graphics.setColor(0, 0, 0, 128/255)
     love.graphics.rectangle('fill', 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT)

@@ -9,6 +9,7 @@ function Room:init(player)
 
     self.text = ""
     self.player = player
+    self.score = player.score
     self.cameraX = self.player.x - (VIRTUAL_WIDTH / 2 - 8)
     self.cameraY = self.player.y - (VIRTUAL_HEIGHT / 2 - 8)
 
@@ -21,6 +22,8 @@ function Room:init(player)
     self:generateEnemies()
 
     self.projectiles = {}
+
+    self.damageNumbers = {}
 end
 
 function Room:generateEnemies()
@@ -67,8 +70,8 @@ function Room:update(dt)
         if enemy.health <= 0 and enemy.dead == false then
             enemy.dead = true
             self.player.exp = self.player.exp + enemy.expGive
-            self.player.score = self.player.score + math.floor(enemy.expGive * math.pi) *
-                                (math.random(100, 130) / 100)
+            self.player.score = self.player.score + math.floor(math.floor(enemy.expGive * math.pi) *
+                                (math.random(100, 130) / 100))
             table.remove(self.enemies, i)
             break
         elseif not enemy.dead then
@@ -82,7 +85,8 @@ function Room:update(dt)
             self.player:goInvulnerable(1.5)
 
             if self.player.health == 0 then
-                gStateStack:push(GameOverState(self.player.score))
+                self.score = self.player.score
+                gStateStack:push(GameOverState(self.score))
             end
         end
     end
@@ -125,14 +129,26 @@ function Room:update(dt)
             projectile:update(dt)
             for key, enemy in pairs(self.enemies) do
                 if enemy.dead == false and projectile:collides(enemy) then
-                    enemy:damage(self.player.attackDamage)
+                    enemy:damage(self.player.attack)
                     --gSounds['hit-enemy']:play()
+                    table.insert(self.damageNumbers,
+                    DamageNumber(self.player.attack, projectile.x, projectile.y)
+                )
                     projectile:destroy()
                     break
                 end
             end
         else
             table.remove(self.projectiles, i)
+            break
+        end
+    end
+
+    for i = #self.damageNumbers, 1, -1 do
+        local damage = self.damageNumbers[i]
+        damage:update(dt)
+        if damage.solid == false then
+            table.remove(self.damageNumbers, i)
             break
         end
     end
@@ -180,6 +196,12 @@ function Room:render()
     for key, projectile in pairs(self.projectiles) do
         if projectile.solid == true then
             projectile:render()
+        end
+    end
+
+    for key, damage in pairs(self.damageNumbers) do
+        if damage.solid == true then
+            damage:render()
         end
     end
     --draw ray from player to mouse

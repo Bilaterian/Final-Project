@@ -18,6 +18,7 @@ require 'src/Player'
 require 'src/TileMap'
 require 'src/Util'
 require 'src/Projectile'
+require 'src/DamageNumber'
 
 require 'src/world/Room'
 
@@ -30,6 +31,7 @@ require 'src/states/entity/EntityWalkState'
 require 'src/states/entity/player/PlayerIdleState'
 require 'src/states/entity/player/PlayerWalkState'
 
+require 'src/states/game/UpgradeState'
 require 'src/states/game/PlayState'
 require 'src/states/game/LevelUpState'
 require 'src/states/game/GameOverState'
@@ -38,7 +40,8 @@ gTextures = {
     ['tiles'] = love.graphics.newImage('graphics/spritesheet.png'),
     ['player'] = love.graphics.newImage('graphics/Hero.png'),
     ['enemies'] = love.graphics.newImage('graphics/enemies.png'),
-    ['projectile'] = love.graphics.newImage('graphics/projectile.png')
+    ['projectile'] = love.graphics.newImage('graphics/projectile.png'),
+    ['upgradebar'] = love.graphics.newImage('graphics/upgradebar.png')
 }
 
 gFrames = {
@@ -46,6 +49,7 @@ gFrames = {
     ['player'] = GenerateQuads(gTextures['player'], 16, 16),
     ['enemies'] = GenerateQuads(gTextures['enemies'], 16, 16),
     ['projectile'] = GenerateQuads(gTextures['projectile'], 8, 8),
+    ['upgradebar'] = GenerateQuads(gTextures['upgradebar'],137, 16)
 }
 
 gFonts = {

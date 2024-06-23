@@ -13,7 +13,6 @@ function Player:init(def)
 
     self.attackRate = 2
     self.attackTimer = 0
-    self.attackDamage = 2
 
     self.level = 1
     self.exp = 0

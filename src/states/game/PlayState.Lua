@@ -1,22 +1,7 @@
 PlayState = Class{__includes = BaseState}
 
-function PlayState:init()
-    self.player = Player {
-        x = ((LEVEL_SIZE * 16) / 2) - 8,
-        y = ((LEVEL_SIZE * 16) / 2) - 8,
-        width = 12,
-        height = 12,
-
-    -- drawing offsets for padded sprites
-        offsetX = 0,
-        offsetY = 0,
-
-        walkSpeed = ENTITY_DEFS['player'].walkspeed,
-        animations = ENTITY_DEFS['player'].animations,
-
-        attack = 5,
-        health = 10,
-    }
+function PlayState:init(player)
+    self.player = player
     self.player.stateMachine = StateMachine {
         ['walk'] = function() return PlayerWalkState(self.player) end,
         ['idle'] = function() return PlayerIdleState(self.player) end,
@@ -27,6 +12,10 @@ function PlayState:init()
     self.room = Room(self.player)
 end
 
+function PlayState:enter()
+    self.player.score = 0
+end
+
 function PlayState:update(dt)
     if love.keyboard.wasPressed('escape') then
         love.event.quit()
@@ -35,6 +24,7 @@ function PlayState:update(dt)
 end
 
 function PlayState:render()
+    love.graphics.setColor(1, 1, 1)
     love.graphics.push()
     self.room:render()
     love.graphics.pop()
