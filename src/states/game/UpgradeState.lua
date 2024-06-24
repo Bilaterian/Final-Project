@@ -16,6 +16,7 @@ function UpgradeState:enter()
 
         attack = 2,
         health = 10,
+        score = 0
     }
     self.upgradePoints = 5
 
@@ -85,26 +86,48 @@ end
 
 function UpgradeState:render()
     --background
-    love.graphics.setColor(89/255, 157/255, 220/255)
-    love.graphics.rectangle('fill', 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT)
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.draw(gTextures['background'], 0, 0)
+
+    love.graphics.setFont(gFonts['medium'])
+    love.graphics.printf('UPGRADES', 0, 10, VIRTUAL_WIDTH, 'center')
+
+    --selector highlight
+    love.graphics.setColor(1, 1, 1)
+    if self.ySelector == 0 then
+        love.graphics.rectangle('fill', 99, 24, 139, 18)
+    elseif self.ySelector == 1 then
+        love.graphics.rectangle('fill', 99, 54, 139, 18)
+    elseif self.ySelector == 2 then
+        love.graphics.rectangle('fill', 99, 84, 139, 18)
+    end
 
     --bar shadow
     love.graphics.setColor(0, 0, 0)
-    love.graphics.rectangle('fill', 101, 16, 135, 14)
-    love.graphics.rectangle('fill', 101, 46, 135, 14)
-    love.graphics.rectangle('fill', 101, 76, 135, 14)
+    love.graphics.rectangle('fill', 101, 26, 135, 14)
+    love.graphics.rectangle('fill', 101, 56, 135, 14)
+    love.graphics.rectangle('fill', 101, 86, 135, 14)
 
     --bar level
     love.graphics.setColor(230/255, 150/255, 0/255)
-    love.graphics.rectangle('fill', 101, 16, 27 * self.healthUpgrade, 14)
-    love.graphics.rectangle('fill', 101, 46, 27 * self.attackUpgrade, 14)
-    love.graphics.rectangle('fill', 101, 76, 27 * self.speedUpgrade, 14)
+    love.graphics.rectangle('fill', 101, 26, 27 * self.healthUpgrade, 14)
+    love.graphics.rectangle('fill', 101, 56, 27 * self.attackUpgrade, 14)
+    love.graphics.rectangle('fill', 101, 86, 27 * self.speedUpgrade, 14)
 
     --bar overlay
     love.graphics.setColor(1, 1, 1)
-    love.graphics.draw(gTextures['upgradebar'], gFrames['upgradebar'][1], 100, 15)
-    love.graphics.draw(gTextures['upgradebar'], gFrames['upgradebar'][1], 100, 45)
-    love.graphics.draw(gTextures['upgradebar'], gFrames['upgradebar'][1], 100, 75)
+    love.graphics.draw(gTextures['upgradebar'], 100, 25)
+    love.graphics.draw(gTextures['upgradebar'], 100, 55)
+    love.graphics.draw(gTextures['upgradebar'], 100, 85)
+
+    --bar tags
+    love.graphics.setFont(gFonts['medium'])
+    love.graphics.printf("Health: " .. tostring(self.player.health + (self.healthUpgrade * 2)),
+                         0, 25, 100, 'right')
+    love.graphics.printf("Attack: " .. tostring(self.player.attack + self.attackUpgrade),
+                         0, 55, 100, 'right')
+    love.graphics.printf("Speed: " .. tostring(self.player.walkSpeed + (self.speedUpgrade * 2)),
+                         0, 85, 100, 'right')
 
     --short description
     local text = ""
@@ -124,6 +147,10 @@ function UpgradeState:render()
             text = text .. "->" .. tostring(self.player.walkSpeed + (self.speedUpgrade* 2) + 2)
         end
     end
+
+    love.graphics.draw(gTextures['barshadow'], 20, 105)
     love.graphics.setFont(gFonts['medium'])
-    love.graphics.printf(text, 0, 100, VIRTUAL_WIDTH, 'center')
+    love.graphics.printf(text, 0, 110, VIRTUAL_WIDTH, 'center')
+    love.graphics.setFont(gFonts['small'])
+    love.graphics.printf('Press enter to start', 0, 125, VIRTUAL_WIDTH, 'center')
 end

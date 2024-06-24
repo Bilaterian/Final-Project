@@ -11,6 +11,9 @@ function Projectile:init(x, y, width, height, xVelocity, yVelocity)
     self.yVelocity = yVelocity * self.velocity
     self.duration = 10
     self.timer = 0
+
+    self.splash = false
+    self.critCheck = false
 end
 
 function Projectile:update(dt)
@@ -35,6 +38,11 @@ end
 
 function Projectile:render()
     if self.solid then
+        if self.splash then
+            love.graphics.setColor(1, 0, 0)
+        else
+            love.graphics.setColor(1, 1, 1)
+        end
         love.graphics.draw(gTextures['projectile'], gFrames['projectile'][1], self.x, self.y)
     end
 end

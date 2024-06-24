@@ -7,6 +7,7 @@ function DamageNumber:init(value, x, y)
 
     self.timer = 0
     self.solid = true
+    self.crit = false
 end
 
 function DamageNumber:update(dt)
@@ -18,7 +19,12 @@ end
 
 function DamageNumber:render()
     if self.solid then
-        love.graphics.setColor(1, 1, 1)
+        if self.crit then
+            love.graphics.setColor(1, 0, 0)
+        else
+            love.graphics.setColor(1, 1, 1)
+        end
+
         love.graphics.setFont(gFonts['small'])
         love.graphics.print(tostring(self.value), math.floor(self.x), math.floor(self.y))
     end

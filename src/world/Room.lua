@@ -9,7 +9,6 @@ function Room:init(player)
 
     self.text = ""
     self.player = player
-    self.score = player.score
     self.cameraX = self.player.x - (VIRTUAL_WIDTH / 2 - 8)
     self.cameraY = self.player.y - (VIRTUAL_HEIGHT / 2 - 8)
 
@@ -17,9 +16,10 @@ function Room:init(player)
     self.mouseY = 0
 
     self.stage = 1
+    self.stageTimer = 0
 
     self.enemies = {}
-    self:generateEnemies()
+    self.spawnedEnemies = false
 
     self.projectiles = {}
 
@@ -32,13 +32,38 @@ function Room:generateEnemies()
     for i = 1, math.max(10, math.floor(10 * self.stage * 0.75)) do
         local type = types[math.random(#types)]
 
+        --try to spawn outside of camera
+        local x = math.random(16, LEVEL_SIZE * 16)
+        local y = math.random(16, LEVEL_SIZE * 16)
+        if x > self.cameraX - 16 and x < self.cameraX + VIRTUAL_WIDTH then
+            if y > self.cameraY - 16 and y < self.cameraY + VIRTUAL_HEIGHT then
+                local directions = {'up', 'down', 'left', 'right'}
+                local direction = directions[math.random(1, 4)]
+
+                local distance = 0
+                if direction == 'up' then
+                    distance = y - (self.cameraY - 16)
+                    y = y - distance
+                elseif direction == 'down' then
+                    distance = self.cameraY + VIRTUAL_HEIGHT - y
+                    y = y + distance
+                elseif direction == 'left' then
+                    distance = x - (self.cameraX - 16)
+                    x = x - distance
+                else
+                    distance = self.cameraX + VIRTUAL_WIDTH - x
+                    x = x + distance
+                end
+            end
+        end
+
         table.insert(self.enemies, Entity {
             animations = ENTITY_DEFS[type].animations,
             walkSpeed = math.max(ENTITY_DEFS[type].walkspeed,
                         math.floor(ENTITY_DEFS[type].walkspeed * self.stage * 0.25)),
 
-            x = math.random(16, LEVEL_SIZE * 16),
-            y = math.random(16, LEVEL_SIZE * 16),
+            x = x,
+            y = y,
             offsetX = 1,
             offsetY = 1,
 
@@ -65,6 +90,14 @@ function Room:update(dt)
 
     self.player:update(dt)
 
+    --short break between rounds
+    if self.stageTimer < 1 then
+        self.stageTimer = self.stageTimer + dt
+    elseif self.spawnedEnemies == false then
+        self.spawnedEnemies = true
+        self:generateEnemies()
+    end
+
     for i = #self.enemies, 1, -1 do
         local enemy = self.enemies[i]
         if enemy.health <= 0 and enemy.dead == false then
@@ -84,9 +117,9 @@ function Room:update(dt)
             self.player:damage(enemy.attack)
             self.player:goInvulnerable(1.5)
 
-            if self.player.health == 0 then
-                self.score = self.player.score
-                gStateStack:push(GameOverState(self.score))
+            if self.player.health <= 0 then
+                score = self.player.score
+                gStateStack:push(GameOverState())
             end
         end
     end
@@ -127,16 +160,40 @@ function Room:update(dt)
 
         if projectile ~= nil and projectile.solid == true then
             projectile:update(dt)
+            --chance for crit 
+            if projectile.critCheck == false and math.random(1, self.player.critRange) == 1 then
+                projectile.splash = true
+                projectile.width = projectile.width + 2
+                projectile.height = projectile.height + 2
+                projectile.x = projectile.x - 1
+                projectile.y = projectile.y - 1
+                projectile.velocity = projectile.velocity * 2
+            end
+            projectile.critCheck = true
+            
+            local splashDamage = 0
             for key, enemy in pairs(self.enemies) do
                 if enemy.dead == false and projectile:collides(enemy) then
-                    enemy:damage(self.player.attack)
+                    
                     --gSounds['hit-enemy']:play()
-                    table.insert(self.damageNumbers,
-                    DamageNumber(self.player.attack, projectile.x, projectile.y)
-                )
+                    if projectile.splash then
+                        enemy:damage(self.player.attack * 2)
+                        splashDamage = splashDamage + self.player.attack * 2
+                    else
+                        enemy:damage(self.player.attack)
+                        table.insert(self.damageNumbers,
+                        DamageNumber(self.player.attack, projectile.x, projectile.y))
+                    end
                     projectile:destroy()
-                    break
+                    if projectile.splash == false then
+                        break
+                    end
                 end
+            end
+            if projectile.splash and splashDamage ~= 0 then
+                local crit = DamageNumber(splashDamage, projectile.x, projectile.y)
+                crit.crit = true
+                table.insert(self.damageNumbers, crit)
             end
         else
             table.remove(self.projectiles, i)
@@ -174,9 +231,12 @@ function Room:update(dt)
         --make a call here to change state and upgrade a stat 
         gStateStack:push(LevelUpState(self.player))
     end
-    if #self.enemies < 1 then
+
+    --spawn new round
+    if #self.enemies < 1 and self.spawnedEnemies then
         self.stage = self.stage + 1
-        self:generateEnemies()
+        self.stageTimer = 0
+        self.spawnedEnemies = false
     end
 end
 

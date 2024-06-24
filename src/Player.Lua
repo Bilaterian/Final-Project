@@ -18,7 +18,8 @@ function Player:init(def)
     self.exp = 0
     self.expGoal = self.level * 1.25 * 80
     
-    self.score = 0
+    self.score = def.score
+    self.critRange = 20
 end
 
 function Player:update(dt)

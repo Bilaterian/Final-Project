@@ -15,8 +15,8 @@ function LevelUpState:init(player)
     self.optionsText = {
         'Increase Max Health by ' .. tostring(math.floor(self.maxHealth/5)),
         'Increase Regeneration by ' .. tostring(math.max(math.floor(self.regenAmount/2), 1)),
-        'Increase Regen Speed by ' .. tostring(self.regenRate * 0.1) .. '.s',
-        'Increase Attack Speed by ' .. tostring(self.attackRate * 0.1) .. '.s',
+        'Increase Regen Speed by ' .. tostring(self.regenRate * 0.1) .. 's',
+        'Increase Attack Speed by ' .. tostring(self.attackRate * 0.1) .. 's',
         'Increase Damage by ' .. tostring(math.max(math.floor(self.attackDamage/10), 1)),
         'Increase Speed by ' .. tostring(math.max(math.floor(self.walkSpeed/8, 1))),
     }
@@ -98,20 +98,24 @@ function LevelUpState:render()
     love.graphics.setColor(0, 0, 0, 128/255)
     love.graphics.rectangle('fill', 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT)
 
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.setFont(gFonts['medium'])
+    love.graphics.printf('LEVEL UP!!!', 0, 15, VIRTUAL_WIDTH, 'center')
+
     --select highlight
     love.graphics.setColor(1, 1, 1)
     if self.select == 1 then
-        love.graphics.rectangle('fill', 2, 15, 84, 114)
+        love.graphics.rectangle('fill', 2, 35, 84, 94)
     elseif self.select == 2 then
-        love.graphics.rectangle('fill', 86, 15, 84, 114)
+        love.graphics.rectangle('fill', 86, 35, 84, 94)
     else
-        love.graphics.rectangle('fill', 170, 15, 84, 114)
+        love.graphics.rectangle('fill', 170, 35, 84, 94)
     end
     --boxes
     love.graphics.setColor(39/255, 64/255, 81/255, 1)
-    love.graphics.rectangle('fill', 4, 17, 80, 110)
-    love.graphics.rectangle('fill', 88, 17, 80, 110)
-    love.graphics.rectangle('fill', 172, 17, 80, 110)
+    love.graphics.rectangle('fill', 4, 37, 80, 90)
+    love.graphics.rectangle('fill', 88, 37, 80, 90)
+    love.graphics.rectangle('fill', 172, 37, 80, 90)
 
     --text
     local text1Title = self.options[self.option1]
@@ -122,11 +126,11 @@ function LevelUpState:render()
     local text3 = self.optionsText[self.option3]
     love.graphics.setColor(1, 1, 1)
     love.graphics.setFont(gFonts['medium'])
-    love.graphics.printf(text1Title, 4, 30, 80, 'center')
-    love.graphics.printf(text2Title, 88, 30, 80, 'center')
-    love.graphics.printf(text3Title, 172, 30, 80, 'center')
+    love.graphics.printf(text1Title, 4, 50, 80, 'center')
+    love.graphics.printf(text2Title, 88, 50, 80, 'center')
+    love.graphics.printf(text3Title, 172, 50, 80, 'center')
     love.graphics.setFont(gFonts['small'])
-    love.graphics.printf(text1, 4, 80, 80, 'center')
-    love.graphics.printf(text2, 88, 80, 80, 'center')
-    love.graphics.printf(text3, 172, 80, 80, 'center')
+    love.graphics.printf(text1, 4, 100, 80, 'center')
+    love.graphics.printf(text2, 88, 100, 80, 'center')
+    love.graphics.printf(text3, 172, 100, 80, 'center')
 end

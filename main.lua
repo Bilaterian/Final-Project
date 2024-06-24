@@ -1,8 +1,5 @@
 require 'src/Dependencies'
 
-local framerate = 1 / FPSCAP
-local tick = 0
-local framePush = false
 function love.load()
     love.window.setTitle('Final Project')
     love.graphics.setDefaultFilter('nearest', 'nearest')
@@ -17,8 +14,10 @@ function love.load()
 
     love.keyboard.keysPressed = {}
 
+    math.randomseed(os.time())
+
     gStateStack = StateStack()
-    gStateStack:push(UpgradeState())
+    gStateStack:push(StartState())
 end
 
 function love.resize(w, h)

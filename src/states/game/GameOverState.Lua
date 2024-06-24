@@ -1,7 +1,7 @@
 GameOverState = Class{__includes = BaseState}
 
-function GameOverState:enter(score)
-    self.score = score or -1
+function GameOverState:enter()
+    self.score = score
 end
 
 function GameOverState:update(dt)
