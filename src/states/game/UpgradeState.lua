@@ -40,17 +40,17 @@ function UpgradeState:update()
         gSounds['select']:play()
         if self.ySelector == 0 then
             self.healthUpgrade = math.max(self.healthUpgrade - 1, 0)
-            if self.upgradePoints < 5 then
+            if self.upgradePoints < 5 - self.healthUpgrade - self.attackUpgrade - self.speedUpgrade then
                 self.upgradePoints = self.upgradePoints + 1
             end
         elseif self.ySelector == 1 then
             self.attackUpgrade = math.max(self.attackUpgrade - 1, 0)
-            if self.upgradePoints < 5 then
+            if self.upgradePoints < 5 - self.healthUpgrade - self.attackUpgrade - self.speedUpgrade  then
                 self.upgradePoints = self.upgradePoints + 1
             end
         elseif self.ySelector == 2 then
             self.speedUpgrade = math.max(self.speedUpgrade - 1, 0)
-            if self.upgradePoints < 5 then
+            if self.upgradePoints < 5 - self.healthUpgrade - self.attackUpgrade - self.speedUpgrade  then
                 self.upgradePoints = self.upgradePoints + 1
             end
         end
