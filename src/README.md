@@ -44,4 +44,3 @@ I had features planned that didn't make the cut due to time constraints. Some ar
 - AI that doesn't clup up
 - Dynamic level generation
 - Random Obstacle Generation
-
