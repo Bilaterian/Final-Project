@@ -20,6 +20,8 @@ function Player:init(def)
     
     self.score = def.score
     self.critRange = 20
+
+    self.DebugText = ''
 end
 
 function Player:update(dt)

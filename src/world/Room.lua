@@ -268,6 +268,7 @@ function Room:render()
             damage:render()
         end
     end
+
     --draw ray from player to mouse
     --[[
     love.graphics.setColor(1,0,1)

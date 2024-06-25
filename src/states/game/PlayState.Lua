@@ -10,6 +10,7 @@ function PlayState:init(player)
     self.player:changeState('idle')
 
     self.room = Room(self.player)
+    self.debugText = ''
 end
 
 function PlayState:enter()
@@ -69,4 +70,6 @@ function PlayState:render()
     
     love.graphics.setColor(1, 1, 1)
     love.graphics.draw(gTextures['aim'], math.floor(love.mouse.x - 8), math.floor(love.mouse.y - 8))
+
+    love.graphics.print(self.debugText, VIRTUAL_WIDTH /2, VIRTUAL_HEIGHT /2)
 end

@@ -86,14 +86,7 @@ function LevelUpState:update(dt)
 end
 
 function LevelUpState:render()
-    --[[
-    --draw boxes here
-    --add icons and text
-    --boxes will be 80 x 110
-    --vertical padding = 17 top and bottom
-    --horizontal padding = 4
-    ]]
-
+    
     --background
     love.graphics.setColor(0, 0, 0, 128/255)
     love.graphics.rectangle('fill', 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT)

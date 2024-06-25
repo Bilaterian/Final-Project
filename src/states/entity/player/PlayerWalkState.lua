@@ -9,6 +9,7 @@ function PlayerWalkState:init(player)
 end
 
 function PlayerWalkState:update(dt)
+
     if love.keyboard.isDown('left') or love.keyboard.isDown('a') then
         self.entity.direction = 'left'
         self.entity:changeAnimation('walk-left')
