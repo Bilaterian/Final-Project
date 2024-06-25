@@ -27,7 +27,7 @@ walk: state for walk animations and handles movement for both player and AI
 State machines are used for animations as previous states arent required to be remembered.
 
 File explanations:
-Room.lua, used to contain the level, the players, and enemies that spawn. The level isn't made in this file as there was plans to make multiple levels.
+Room.lua, used to contain the level, the players, and enemies that spawn. The level isn't made in this file as there were plans to make multiple levels.
 
 DamageNumber.lua, used to display a damage number on screen. I made this to give the player feedback on how much health an enemy roughly has.
 
