@@ -48,7 +48,9 @@ end
 
 function love.update(dt)
     local x,y = love.mouse.getPosition()
-    love.mouse.x, love.mouse.y = push:toGame(x,y)
+    if x and y then
+        love.mouse.x, love.mouse.y = push:toGame(x,y)
+    end
 
     Timer.update(dt)
     gStateStack:update(dt)

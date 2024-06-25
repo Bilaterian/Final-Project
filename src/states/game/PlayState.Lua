@@ -69,7 +69,9 @@ function PlayState:render()
     end
     
     love.graphics.setColor(1, 1, 1)
-    love.graphics.draw(gTextures['aim'], math.floor(love.mouse.x - 8), math.floor(love.mouse.y - 8))
+    if love.mouse.x and love.mouse.y then
+        love.graphics.draw(gTextures['aim'], math.floor(love.mouse.x - 8), math.floor(love.mouse.y - 8))
+    end
 
     love.graphics.print(self.debugText, VIRTUAL_WIDTH /2, VIRTUAL_HEIGHT /2)
 end

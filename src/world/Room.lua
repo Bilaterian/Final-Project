@@ -85,8 +85,10 @@ function Room:generateEnemies()
 end
 
 function Room:update(dt)
-    self.mouseX = self.cameraX + love.mouse.x
-    self.mouseY = self.cameraY + love.mouse.y
+    if love.mouse.x and love.mouse.y then
+        self.mouseX = self.cameraX + love.mouse.x
+        self.mouseY = self.cameraY + love.mouse.y
+    end
 
     self.player:update(dt)
 
