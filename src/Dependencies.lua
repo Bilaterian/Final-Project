@@ -47,7 +47,8 @@ gTextures = {
     ['projectile'] = love.graphics.newImage('graphics/projectile.png'),
     ['upgradebar'] = love.graphics.newImage('graphics/upgradebar.png'),
     ['background'] = love.graphics.newImage('graphics/background.png'),
-    ['barshadow'] = love.graphics.newImage('graphics/barshadow.png')
+    ['barshadow'] = love.graphics.newImage('graphics/barshadow.png'),
+    ['aim'] = love.graphics.newImage('graphics/aim.png')
 }
 
 gFrames = {
@@ -62,4 +63,15 @@ gFonts = {
     ['medium'] = love.graphics.newFont('fonts/font.ttf', 16),
     ['large'] = love.graphics.newFont('fonts/font.ttf', 32),
     ['title'] = love.graphics.newFont('fonts/pixel-bit-advanced.ttf', 24),
+}
+
+gSounds = {
+    ['fire'] = love.audio.newSource('sounds/shoot.wav', 'static'),
+    ['hurt'] = love.audio.newSource('sounds/hurt.wav', 'static'),
+    ['crit'] = love.audio.newSource('sounds/crit.wav', 'static'),
+    ['select'] = love.audio.newSource('sounds/select2.wav', 'static'),
+    ['confirm'] = love.audio.newSource('sounds/select1.wav', 'static'),
+    ['enemy_hurt'] = love.audio.newSource('sounds/enemy_hurt.wav', 'static'),
+    ['level_up'] = love.audio.newSource('sounds/level_up.wav', 'static'),
+    ['music'] = love.audio.newSource('sounds/DST-TowerDefenseTheme.mp3', 'static')
 }

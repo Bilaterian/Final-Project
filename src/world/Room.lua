@@ -113,7 +113,7 @@ function Room:update(dt)
         end
 
         if not enemy.dead and self.player:collides(enemy) and not self.player.invulnerable then
-            --gSounds['hit-player']:play()
+            gSounds['hurt']:play()
             self.player:damage(enemy.attack)
             self.player:goInvulnerable(1.5)
 
@@ -152,6 +152,8 @@ function Room:update(dt)
         Projectile(self.player.x, self.player.y,
                    8, 8,
                    xVelocity, yVelocity))
+        gSounds['fire']:stop()
+        gSounds['fire']:play()
     end
 
     --update projectiles here
@@ -175,7 +177,6 @@ function Room:update(dt)
             for key, enemy in pairs(self.enemies) do
                 if enemy.dead == false and projectile:collides(enemy) then
                     
-                    --gSounds['hit-enemy']:play()
                     if projectile.splash then
                         enemy:damage(self.player.attack * 2)
                         splashDamage = splashDamage + self.player.attack * 2
@@ -183,6 +184,8 @@ function Room:update(dt)
                         enemy:damage(self.player.attack)
                         table.insert(self.damageNumbers,
                         DamageNumber(self.player.attack, projectile.x, projectile.y))
+                        gSounds['enemy_hurt']:stop()
+                        gSounds['enemy_hurt']:play()
                     end
                     projectile:destroy()
                     if projectile.splash == false then
@@ -194,6 +197,7 @@ function Room:update(dt)
                 local crit = DamageNumber(splashDamage, projectile.x, projectile.y)
                 crit.crit = true
                 table.insert(self.damageNumbers, crit)
+                gSounds['crit']:play()
             end
         else
             table.remove(self.projectiles, i)

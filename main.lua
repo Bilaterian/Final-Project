@@ -26,6 +26,15 @@ end
 
 function love.keypressed(key)
     love.keyboard.keysPressed[key] = true
+    if key == 'w' then
+        love.keyboard.keysPressed['up'] = true
+    elseif key == 'a' then
+        love.keyboard.keysPressed['left'] = true
+    elseif key == 's' then
+        love.keyboard.keysPressed['down'] = true
+    elseif key == 'd' then
+        love.keyboard.keysPressed['right'] = true
+    end
 end
 
 function love.keyboard.wasPressed(key)
@@ -38,12 +47,11 @@ function love.mousepressed(x, y, button, istouch)
 end
 
 function love.update(dt)
-    Timer.update(dt)
-    gStateStack:update(dt)
-
     local x,y = love.mouse.getPosition()
     love.mouse.x, love.mouse.y = push:toGame(x,y)
 
+    Timer.update(dt)
+    gStateStack:update(dt)
     love.keyboard.keysPressed = {}
     love.mouse.press = false
 end

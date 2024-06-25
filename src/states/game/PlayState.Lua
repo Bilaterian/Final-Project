@@ -67,4 +67,6 @@ function PlayState:render()
         love.graphics.printf(tostring(self.player.score), 0, 10, VIRTUAL_WIDTH, 'center')
     end
     
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.draw(gTextures['aim'], math.floor(love.mouse.x - 8), math.floor(love.mouse.y - 8))
 end

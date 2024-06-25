@@ -28,14 +28,16 @@ function UpgradeState:enter()
 end
 
 function UpgradeState:update()
-
     if love.keyboard.wasPressed('up') then
+        gSounds['select']:play()
         self.ySelector = math.max(self.ySelector - 1, 0)
     elseif love.keyboard.wasPressed('down') then
+        gSounds['select']:play()
         self.ySelector = math.min(self.ySelector + 1, 2)
     end
 
     if love.keyboard.wasPressed('left') then
+        gSounds['select']:play()
         if self.ySelector == 0 then
             self.healthUpgrade = math.max(self.healthUpgrade - 1, 0)
             if self.upgradePoints < 5 then
@@ -53,6 +55,7 @@ function UpgradeState:update()
             end
         end
     elseif love.keyboard.wasPressed('right') then
+        gSounds['select']:play()
         if self.ySelector == 0 then
             if self.upgradePoints > 0 then
                 self.upgradePoints = self.upgradePoints - 1
@@ -76,6 +79,7 @@ function UpgradeState:update()
         self.player.health = self.player.maxHealth
         self.player.attack = self.player.attack + self.attackUpgrade
         self.player.walkSpeed = self.player.walkSpeed + (self.speedUpgrade * 2)
+        gSounds['confirm']:play()
         gStateStack:push(PlayState(self.player))
     end
 
@@ -90,7 +94,11 @@ function UpgradeState:render()
     love.graphics.draw(gTextures['background'], 0, 0)
 
     love.graphics.setFont(gFonts['medium'])
-    love.graphics.printf('UPGRADES', 0, 10, VIRTUAL_WIDTH, 'center')
+    love.graphics.printf('UPGRADES', 10, 7, VIRTUAL_WIDTH, 'left')
+
+    love.graphics.printf('Points: ', 0, 7, VIRTUAL_WIDTH - 20, 'right')
+    love.graphics.setColor(230/255, 150/255, 0/255)
+    love.graphics.printf(tostring(self.upgradePoints), 0, 7, VIRTUAL_WIDTH - 10, 'right')
 
     --selector highlight
     love.graphics.setColor(1, 1, 1)

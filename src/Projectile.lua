@@ -43,6 +43,6 @@ function Projectile:render()
         else
             love.graphics.setColor(1, 1, 1)
         end
-        love.graphics.draw(gTextures['projectile'], gFrames['projectile'][1], self.x, self.y)
+        love.graphics.draw(gTextures['projectile'], gFrames['projectile'][1], math.floor(self.x), math.floor(self.y))
     end
 end
